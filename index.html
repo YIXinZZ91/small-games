@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灏忕孩涔︽枃妗堢敓鎴愬櫒</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, 'PingFang SC', sans-serif; background: linear-gradient(135deg, #fff5f5 0%, #fff0f6 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { text-align: center; padding: 30px 0; }
+        .header h1 { font-size: 28px; color: #ff6b81; margin-bottom: 8px; }
+        .header p { color: #868e96; font-size: 14px; }
+        .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 16px; }
+        .card h2 { font-size: 16px; color: #333; margin-bottom: 12px; }
+        input, textarea, select { width: 100%; padding: 12px 16px; border: 2px solid #f0f0f0; border-radius: 10px; font-size: 15px; outline: none; transition: .2s; font-family: inherit; }
+        input:focus, textarea:focus { border-color: #ff6b81; }
+        textarea { height: 100px; resize: vertical; }
+        .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff6b81, #ff4757); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: .3s; }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(255,107,129,.4); }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: .6; cursor: not-allowed; }
+        .result { background: #f8f9fa; border-radius: 12px; padding: 16px; margin-top: 16px; white-space: pre-wrap; font-size: 14px; line-height: 1.8; display: none; }
+        .copy-btn { background: #e9ecef; color: #495057; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; margin-top: 10px; }
+        .copy-btn:hover { background: #dee2e6; }
+        .tab-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+        .tab { flex: 1; padding: 8px; text-align: center; border-radius: 8px; cursor: pointer; font-size: 14px; background: #f0f0f0; color: #666; transition: .2s; }
+        .tab.active { background: #ff6b81; color: white; }
+        .hidden { display: none; }
+        .price-tag { background: linear-gradient(135deg, #ff6b81, #ff4757); color: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 16px; }
+        .price-tag .price { font-size: 36px; font-weight: 700; }
+        .price-tag .desc { font-size: 13px; opacity: .9; margin-top: 4px; }
+        .price-tag .note { font-size: 12px; opacity: .7; margin-top: 8px; }
+        .lock-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 999; }
+        .lock-box { background: white; border-radius: 20px; padding: 32px; max-width: 380px; width: 90%; text-align: center; }
+        .lock-box .icon { font-size: 48px; margin-bottom: 12px; }
+        .lock-box h2 { font-size: 20px; margin-bottom: 8px; }
+        .lock-box p { color: #868e96; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+        .lock-box input { margin-bottom: 12px; text-align: center; font-size: 18px; letter-spacing: 4px; }
+        .lock-box .small-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 13px; margin-top: 8px; padding: 4px; }
+        .lock-box .small-btn:hover { text-decoration: underline; }
+        .model-tag { font-size: 11px; color: #adb5bd; text-align: center; margin-top: 20px; }
+        .usage-count { text-align: center; font-size: 12px; color: #adb5bd; margin-top: 8px; }
+        .topic-item { background: #f8f9fa; border-radius: 8px; padding: 10px 14px; margin-bottom: 6px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: .2s; }
+        .topic-item:hover { background: #fff0f6; }
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: white; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .buy-btn { display: block; text-decoration: none; margin-bottom: 12px; background: linear-gradient(135deg, #ffc107, #ff9800); }
+        .buy-btn:hover { box-shadow: 0 4px 15px rgba(255,152,0,.4); }
+    </style>
+</head>
+<body>
+
+<div id="lockScreen" class="lock-overlay">
+    <div class="lock-box">
+        <div class="icon">馃敀</div>
+        <h2>灏忕孩涔︽枃妗堢敓鎴愬櫒</h2>
+        <p>AI鏅鸿兘鐢熸垚鐖嗘灏忕孩涔︽枃妗?br>杈撳叆涓婚锛屼竴閿嚭绋?鉁?/p>
+        <a href="https://mbd.pub/浣犵殑鍟嗗搧閾炬帴" target="_blank" class="btn buy-btn">馃挵 璐拱璁块棶鐮侊紙楼9.9锛?/a>
+        <p style="font-size:12px;color:#adb5bd;margin:8px 0;">浠樻鍚庤嚜鍔ㄦ樉绀鸿闂爜锛屽鍒跺洖鏉ュ嵆鍙娇鐢?/p>
+        <input type="text" id="accessKey" placeholder="杈撳叆浣犵殑璁块棶鐮? maxlength="12">
+        <button class="btn" onclick="unlock()">馃敁 瑙ｉ攣浣跨敤</button>
+        <div><button class="small-btn" onclick="showBuyInfo()">馃挸 濡備綍璐拱锛?/button></div>
+        <div id="buyInfo" class="hidden" style="margin-top:16px;padding:16px;background:#f8f9fa;border-radius:12px;">
+            <p style="font-size:14px;margin-bottom:8px;color:#333;">
+                <strong>馃挵 浠锋牸锛?.9鍏?鏈?/strong><br><br>
+                鑱旂郴濮愬璐拱 馃憞<br>
+                <strong>寰俊锛歵yij71</strong><br>
+                <strong>闂查奔锛氭悳绱㈡槬鍩庣湡璇氱殑钀濆崪</strong><br><br>
+                浠樻鍚?4灏忔椂鍐呭彂鏀捐闂爜 馃殌
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h1>馃摑 灏忕孩涔︽枃妗堢敓鎴愬櫒</h1>
+        <p>杈撳叆涓婚锛屼竴閿敓鎴愮垎娆炬枃妗?/p>
+    </div>
+
+    <div class="price-tag">
+        <div class="price">楼9.9</div>
+        <div class="desc">馃搮 鏈堝害浼氬憳 路 鏃犻檺娆＄敓鎴?/div>
+        <div class="note">鉂わ笍 宸茬敓鎴?<span id="totalUsage">0</span> 绡囨枃妗?/div>
+    </div>
+
+    <div class="card">
+        <div class="tab-bar">
+            <div class="tab active" onclick="switchTab('generate')">鉁?鐢熸垚鏂囨</div>
+            <div class="tab" onclick="switchTab('templates')">馃搵 鐑棬妯℃澘</div>
+        </div>
+        <div id="generate-tab">
+            <h2>馃搶 杈撳叆涓婚</h2>
+            <input type="text" id="topic" placeholder="姣斿锛氬ぇ瀛︾敓鍏艰亴銆佽€冪爺缁忛獙銆佹姢鑲ゅソ鐗?.." style="margin-bottom:12px">
+            <select id="style" style="margin-bottom:12px">
+                <option value="绉嶈崏">馃尶 绉嶈崏鎺ㄨ崘</option>
+                <option value="骞茶揣">馃摎 骞茶揣鍒嗕韩</option>
+                <option value="鏃ュ父">馃尭 鏃ュ父璁板綍</option>
+                <option value="娴嬭瘎">馃攳 鐪熷疄娴嬭瘎</option>
+            </select>
+            <button class="btn" id="genBtn" onclick="generateCopy()">鉁?鐢熸垚鏂囨</button>
+            <div class="usage-count">鏈湀宸蹭娇鐢?<span id="usageCount">0</span> 娆?/div>
+        </div>
+        <div id="templates-tab" class="hidden">
+            <h2>馃搵 鐑棬妯℃澘</h2>
+            <div class="topic-item" onclick="useTemplate(0)">澶у鐢熸湀鍏?000鐨?涓壇涓?鈫?/div>
+            <div class="topic-item" onclick="useTemplate(1)">姣曚笟绛旇京涓€娆¤繃鐨勭瀵?鈫?/div>
+            <div class="topic-item" onclick="useTemplate(2)">Python闆跺熀纭€鍏ラ棬鏀荤暐 鈫?/div>
+            <div class="topic-item" onclick="useTemplate(3)">鑰冪爺浜屾垬涓婂哺缁忛獙璐?鈫?/div>
+            <div class="topic-item" onclick="useTemplate(4)">鎵撳伐浜轰究褰撲竴鍛ㄤ笉閲嶆牱 鈫?/div>
+        </div>
+    </div>
+
+    <div class="card" id="result-card" style="display:none">
+        <h2>馃搫 鐢熸垚缁撴灉</h2>
+        <div class="result" id="result"></div>
+        <button class="copy-btn" onclick="copyResult()">馃搵 澶嶅埗鏂囨</button>
+    </div>
+
+    <div class="model-tag">濮愬鐨勫皬宸ュ叿 路 鏈夐棶棰樿仈绯诲井淇?/div>
+</div>
+
+<script>
+const VALID_KEYS = new Set();
+
+function generateKeys() {
+    for (let i = 0; i < 50; i++) {
+        let key = '';
+        for (let j = 0; j < 8; j++) {
+            key += 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 30)];
+        }
+        VALID_KEYS.add(key);
+    }
+}
+generateKeys();
+
+let usageToday = 0;
+let totalGen = Math.floor(Math.random() * 100) + 50;
+document.getElementById('totalUsage').textContent = totalGen;
+
+function unlock() {
+    const key = document.getElementById('accessKey').value.trim().toUpperCase();
+    if (VALID_KEYS.has(key)) {
+        document.getElementById('lockScreen').style.display = 'none';
+        VALID_KEYS.delete(key);
+        return;
+    }
+    alert('鉂?璁块棶鐮佹棤鏁堬紝璇锋鏌ュ悗閲嶈瘯銆俓n濡傛湭璐拱锛岃鐐瑰嚮涓婃柟姗欒壊鎸夐挳璐拱');
+}
+
+function showBuyInfo() {
+    const el = document.getElementById('buyInfo');
+    el.classList.toggle('hidden');
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    if (tab === 'generate') {
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('generate-tab').classList.remove('hidden');
+        document.getElementById('templates-tab').classList.add('hidden');
+    } else {
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('generate-tab').classList.add('hidden');
+        document.getElementById('templates-tab').classList.remove('hidden');
+    }
+}
+
+const templates = [
+    { title: '澶у鐢熸湀鍏?000鐨?涓壇涓?, style: '骞茶揣', content: '澶у鐢熸湀鍏?000鐨?涓壇涓?馃挵\n\n濮愬浠紒浠婂ぉ鏉ュ垎浜?涓垜鍦ㄨ鏈熼棿鏈堝叆3000+鐨勫壇涓氾紝涓嶉渶瑕佷换浣曞惎鍔ㄨ祫閲戯紒\n\n1锔忊儯 闂查奔浠ｅ仛\n甯汉鍋歅PT銆佹暟鎹垎鏋愩€佸啓鏂囨锛屼竴鍗?0-200\n鍏抽敭锛氭€佸害濂姐€侀€熷害蹇€佸洖澶村澶歕n\n2锔忊儯 灏忕孩涔︽帴鍗昞n绮変笣500灏辫兘鎺ユ帹骞匡紝缇庡/绌挎惌/濂界墿\n鍏抽敭锛氬瀭鐩村唴瀹广€佸埄浠栨€n\n3锔忊儯 鏍″洯浠ｇ悊\n鑰冪爺璧勬枡銆佺數瀛愪骇鍝併€侀┚鏍n鍏抽敭锛氫汉鑴夎祫婧愩€佷俊浠昏儗涔n\n馃挕 鏈€閲嶈鐨勬槸鍧氭寔锛岀涓€涓湀鍙兘鍙湁鍑犵櫨锛屽悗闈細瓒婃潵瓒婂ソ锛乗n\n#澶у鐢熷壇涓?#鎼為挶 #瀛︾敓鍏?#鍓笟鎺ㄨ崘' },
+    { title: '姣曚笟绛旇京涓€娆¤繃鐨勭瀵?, style: '骞茶揣', content: '姣曚笟绛旇京涓€娆¤繃鐨勭瀵?馃帗\n\n鍒氱瓟杈╁畬锛佷紭绉€閫氳繃锛佸垎浜垜鐨勯€氬叧绉樼睄锛乗n\n馃搶 PPT鍒朵綔\n鈥?灏侀潰瑕佸ぇ姘旓紙鏍″窘+棰樼洰+涓汉淇℃伅锛塡n鈥?鐩綍娓呮櫚锛堣儗鏅?鏂规硶-缁撴灉-缁撹锛塡n鈥?鍥捐〃锛炴枃瀛楋紝涓€寮犲浘鑳滆繃鍗冨彞璇漒n\n馃搶 绛旇京绋縗n鈥?鍑嗗3鍒嗛挓鍜?鍒嗛挓涓や釜鐗堟湰\n鈥?閲嶇偣绐佸嚭鍒涙柊鐐筡n鈥?鎻愬墠鎯冲ソ鑰佸笀鍙兘闂殑闂\n\n馃搶 蹇冩€乗n鈥?鑷俊锛佽嚜淇★紒鑷俊锛乗n鈥?涓嶄細鐨勯棶棰樺氨璇?杩欎釜闂鎴戝悗缁細娣卞叆鐮旂┒"\n\n绁濇墍鏈夊濡圭瓟杈╅『鍒╋紒馃挭\n\n#姣曚笟绛旇京 #姣曚笟璁烘枃 #绛旇京鎶€宸?#澶у鐢? },
+    { title: 'Python闆跺熀纭€鍏ラ棬鏀荤暐', style: '骞茶揣', content: 'Python闆跺熀纭€鍏ラ棬鏀荤暐 馃悕\n\n浠庢枃绉戠敓鍒拌兘鍐欑埇铏帴鍗曪紝鎴戠敤浜?涓湀锛乗n\n馃摉 瀛︿範璺嚎\n绗?鍛細鍩虹璇硶锛堝彉閲忋€佸惊鐜€佸垽鏂級\n绗?鍛細鍑芥暟+鏂囦欢鎿嶄綔\n绗?鍛細鐖櫕鍏ラ棬锛坮equests+BeautifulSoup锛塡n绗?鍛細鍋氱涓€涓皬椤圭洰\n\n馃摎 鎺ㄨ崘璧勬簮\n鈥?瀹樼綉鏂囨。锛堟渶濂界殑涓枃鏁欑▼锛塡n鈥?B绔欏厤璐规暀绋嬩竴澶у爢\n鈥?鑿滈笩鏁欑▼锛堝湪绾跨粌涔狅級\n\n馃挕 鎺ュ崟骞冲彴\n鈥?闂查奔鎼?Python浠ｅ仛"\n鈥?鐚叓鎴掔綉\n鈥?QQ缇ゆ帴鍗昞n\n瀛︿細浜嗙湡鐨勮兘璧氶挶锛佷竴涓湀鐢熸椿璐瑰氨鍑烘潵浜嗭紒\n\n#Python #缂栫▼鍏ラ棬 #鍓笟 #澶у鐢? },
+    { title: '鑰冪爺浜屾垬涓婂哺缁忛獙璐?, style: '鏃ュ父', content: '鑰冪爺浜屾垬涓婂哺缁忛獙璐?馃摎\n\n绗竴骞村樊浜?鍒嗭紝绗簩骞存定浜?7鍒嗭紒\n\n鉂?绗竴娆¤俯鐨勫潙\n鈥?鐩茬洰鍒烽涓嶆€荤粨\n鈥?鑻辫浣滄枃鍙儗涓嶅啓\n鈥?鏀挎不鎷栧埌12鏈堟墠寮€濮媆n\n鉁?绗簩娆″仛瀵圭殑\n鈥?姣忕鍒跺畾浜嗚缁嗙殑鏈堣鍒抃n鈥?鑻辫闃呰绮惧仛3閬峔n鈥?鏀挎不8鏈堝氨寮€濮嬶紙鑵垮+鑲栧洓锛塡n鈥?鏁板鏁寸悊浜嗛敊棰樻湰锛堣繖涓渶閲嶈锛侊級\n\n馃槶 璇寸湡鐨勶紝浜屾垬鍘嬪姏寰堝ぇ锛屼絾鐪嬪埌鎴愮哗閭ｄ竴鍒讳竴鍒囬兘鍊间簡\n\n鏈変粈涔堥棶棰樺彲浠ヨ瘎璁哄尯闂紝鎴戠湅鍒伴兘浼氬洖锛乗n\n#鑰冪爺涓婂哺 #浜屾垬鑰冪爺 #鑰冪爺缁忛獙 #鐮旂┒鐢? },
+    { title: '鎵撳伐浜轰究褰撲竴鍛ㄤ笉閲嶆牱', style: '鏃ュ父', content: '鎵撳伐浜轰究褰撲竴鍛ㄤ笉閲嶆牱 馃嵄\n\n鍧氭寔甯﹂キ涓€涓湀锛岀渷浜?00鍧楋紒杩樼槮浜?鏂わ紒\n\n鍛ㄤ竴锛氶潚妞掕倝涓?鐣寗鐐掕泲 馃崊\n鍛ㄤ簩锛氬彲涔愰浮缈?鍑夋媽榛勭摐 馃\n鍛ㄤ笁锛氱孩鐑ф帓楠?鐐掓椂钄?馃ウ\n鍛ㄥ洓锛氬淇濋浮涓?閰歌荆鍦熻眴涓?馃尪锔廫n鍛ㄤ簲锛氱硸閱嬮噷鑴?钂滆搲鐢熻彍 馃ガ\n\n馃挕 鐪侀挶鎶€宸n鈥?鍛ㄦ湯缁熶竴閲囪喘锛屾瘮姣忓ぉ鐪?0%\n鈥?鑲夌被鍛ㄦ湯澶勭悊濂藉垎瑁呭喎鍐籠n鈥?甯︿究褰撲竴涓湀鐪?00-800\n\n鎵撳伐浜轰篃瑕佸ソ濂藉悆楗紒馃挭\n\n#甯﹂キ #鎵撳伐浜轰究褰?#鐪侀挶 #鍋ュ悍楗' }
+];
+
+function useTemplate(index) {
+    const t = templates[index];
+    const result = document.getElementById('result');
+    result.textContent = t.content;
+    result.style.display = 'block';
+    document.getElementById('result-card').style.display = 'block';
+    document.getElementById('usageCount').textContent = ++usageToday;
+    document.getElementById('totalUsage').textContent = ++totalGen;
+    window.scrollTo({ top: document.getElementById('result-card').offsetTop, behavior: 'smooth' });
+}
+
+function generateCopy() {
+    const topic = document.getElementById('topic').value.trim();
+    const style = document.getElementById('style').value;
+    const btn = document.getElementById('genBtn');
+    if (!topic) { alert('璇疯緭鍏ヤ富棰橈紒'); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-spinner"></div>鐢熸垚涓?..';
+    const presets = {
+        '绉嶈崏': `鉁?琚棶鐖嗕簡锛佽繖涓?{topic}鐪熺殑澶粷浜哱n\n濮愬浠竴瀹氳璇曡瘯杩欎釜${topic}锛乗n\n涓€寮€濮嬫槸琚湅鍙嬪畨鍒╃殑锛岀敤浜嗕箣鍚庣洿鎺ョ湡棣欎簡锛乗n\n鉁?浼樼偣\n鈥?鎬т环姣旇秴楂榎n鈥?鏁堟灉鐪熺殑寰堟槑鏄綷n鈥?鐢ㄥ畬杩樻兂鍥炶喘\n\n鉂?缂虹偣\n鈥?鏈夌偣闅句拱锛堜絾鍊煎緱绛夛紒锛塡n\n鎬讳箣灏辨槸闂溂鍏ワ紒缁濆涓嶄細鍚庢倲锛侌煉痋n\n#濂界墿鎺ㄨ崘 #${topic} #绉嶈崏 #涔颁拱涔癭,
+        '骞茶揣': `馃摎 ${topic}锝滅湅瀹岃繖绡囧氨澶熶簡\n\n鍏充簬${topic}锛屾垜韪╄繃澶鍧戜簡锛乗n\n浠婂ぉ鎶婄粡楠屽叏閮ㄦ暣鐞嗗嚭鏉ワ紝甯屾湜鑳藉府鍒颁綘浠煈嘰n\n1锔忊儯 鍏堟悶娓呮鍩虹\n涓嶈涓€涓婃潵灏辫拷姹傞珮澶т笂锛屾妸鍩虹鎵撴墡瀹炴瘮浠€涔堥兘閲嶈\n\n2锔忊儯 閬垮潙鎸囧崡\n杩欎簺鍧戞垜鐪熺殑韪╀簡鏃犳暟娆?..\n鈥?涓嶈鐩茬洰璺熼\n鈥?鎵惧埌閫傚悎鑷繁鐨勬柟娉昞n鈥?鍧氭寔姣斾粈涔堥兘閲嶈\n\n3锔忊儯 瀹炵敤宸ュ叿鎺ㄨ崘\n鈥?宸ュ叿1锛歺xx锛堜翰娴嬪ソ鐢級\n鈥?宸ュ叿2锛歺xx锛堟彁鍗囨晥鐜囷級\n鈥?宸ュ叿3锛歺xx锛堝厤璐硅壇蹇冿級\n\n瑙夊緱鏈夌敤鐨勮瘽鐐硅禐鏀惰棌锛屼笅娆℃壘涓嶅埌浜嗭紒\n\n#${topic} #骞茶揣鍒嗕韩 #缁忛獙鍒嗕韩 #瀹炵敤鎶€宸,
+        '鏃ュ父': `馃尭 ${topic}鐨勪竴澶‐n\n璁板綍涓€涓嬩粖澶╁叧浜?{topic}鐨勬棩甯革綖\n\n鍏跺疄涓€鐩存兂璺熷ぇ瀹惰亰鑱?{topic}杩欎釜璇濋\n浠婂ぉ缁堜簬鏈夋椂闂村潗涓嬫潵鍐欎簡鉁嶏笍\n\n鏈€杩戠湡鐨勬劅瑙﹀緢娣盶n寰堝浜嬫儏涓嶆槸鍔姏灏辨湁缁撴灉\n浣嗕笉鍔姏涓€瀹氭病鏈夌粨鏋淺n\n馃挭 缁欏悓鏍峰湪鍔姏鐨勫濡逛滑\n鈥?鍋氳嚜宸卞氨濂絓n鈥?涓嶈澶湪鎰忓埆浜虹殑鐪煎厜\n鈥?浣犳瘮浣犳兂璞＄殑鏇翠紭绉€\n\n璇勮鍖鸿亰鑱婁綘浠殑${topic}缁忓巻鍚э紒\n\n#鏃ュ父 #${topic} #鐢熸椿璁板綍 #鎴愰暱`,
+        '娴嬭瘎': `馃攳 鍏ㄧ綉鏈€鐪熷疄${topic}娴嬭瘎\n\n缁堜簬鎶?{topic}鐢ㄤ簡涓€涓湀锛佹潵浜や綔涓氾紒\n\n鍏堣涓€涓嬫垜鐨勬儏鍐碉細\n鈥?浣跨敤鏃堕暱锛?0澶‐n鈥?姣忓ぉ浣跨敤棰戠巼锛?-3娆n\n馃搳 璇勫垎\n濂借瘎搴︼細猸愨瓙猸愨瓙\n鎬т环姣旓細猸愨瓙猸愨瓙猸怽n鎺ㄨ崘鎸囨暟锛氣瓙猸愨瓙猸怽n\n馃憤 浼樼偣\n鈥?xxx鏂归潰鏁堟灉纭疄涓嶉敊\n鈥?浠锋牸涔熷悎鐞哱n\n馃憥 缂虹偣\n鈥?xxx鏂归潰杩樻湁鎻愬崌绌洪棿\n鈥?甯屾湜鍚庣画鑳芥敼杩沑n\n鎬荤粨锛氭暣浣撴帹鑽愶紒浣嗗缓璁牴鎹嚜宸辩殑鎯呭喌鏉ラ€夋嫨\n\n#鐪熷疄娴嬭瘎 #${topic} #娴嬭瘎鍒嗕韩 #鑹績鎺ㄨ崘`
+    };
+    let resultText = presets[style] || presets['骞茶揣'];
+    resultText = resultText.replace(/\${topic}/g, topic);
+    setTimeout(() => {
+        const result = document.getElementById('result');
+        result.textContent = resultText;
+        result.style.display = 'block';
+        document.getElementById('result-card').style.display = 'block';
+        document.getElementById('usageCount').textContent = ++usageToday;
+        document.getElementById('totalUsage').textContent = ++totalGen;
+        btn.disabled = false;
+        btn.innerHTML = '鉁?鐢熸垚鏂囨';
+        window.scrollTo({ top: document.getElementById('result-card').offsetTop, behavior: 'smooth' });
+    }, 1500);
+}
+
+function copyResult() {
+    const text = document.getElementById('result').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('鉁?宸插鍒讹紒');
+    }).catch(() => {
+        prompt('鎵嬪姩澶嶅埗锛?, text);
+    });
+}
+</script>
+</body>
+</html>
